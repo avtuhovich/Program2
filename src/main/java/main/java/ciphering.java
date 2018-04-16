@@ -26,7 +26,7 @@ public class ciphering {
         }
     }
 
-    private void parseKey(String keys) {
+    private void CiphKey(String keys) {
         int i;
         String text = " ";
         key = new byte[keys.length()];
@@ -38,7 +38,7 @@ public class ciphering {
         }
     }
 
-    public byte[] decoding(byte[] text) {
+    public byte[] Keycoder(byte[] text) {
         int i;
         byte[] res = new byte[text.length];
         for (i = 0; i < text.length; i++) {
