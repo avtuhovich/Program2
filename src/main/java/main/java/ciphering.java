@@ -1,15 +1,13 @@
 package main.java;
 
-/*
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-**/
+
 public class ciphering {
     private byte key[];
 
-    /*
     @Argument
     private String inputName;
     @Option(name = "outputName", usage = "Output file coding")
@@ -27,7 +25,7 @@ public class ciphering {
             cmd.printUsage(System.out);
         }
     }
-*/
+
     private void parseKey(String keys) {
         int i;
         String text = " ";
@@ -48,8 +46,8 @@ public class ciphering {
         }
         return res;
     }
-/*
-        public String getInputName() {
+
+    public String getInputName() {
             return this.inputName;
         }
 
@@ -61,6 +59,5 @@ public class ciphering {
             return this.keys;
         }
 
-*/
 
 }
