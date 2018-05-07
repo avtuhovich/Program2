@@ -1,4 +1,3 @@
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -6,26 +5,29 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class CipheringTest {
 
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void crypt() throws IOException {
-        File fl = folder.newFile("input");
-        FileUtils.writeStringToFile(fl, "Tests");
-        Ciphering ciphering = new Ciphering("key", fl.getAbsolutePath());
-        Assert.assertEquals(" \u000E\u0003\n2\u0018\u001E\u0007<\n\b\u00189\n\u001D\u001F", ciphering.coding());
+    public void encrypt() throws IOException {
+        File file = temporaryFolder.newFile("input");
+        Files.write(file.toPath(), "Chesherskej".getBytes());
+        Encryptor encryptor = new Encryptor(new String[]{"-c", "54656c74", file.getAbsolutePath()});
+        Assert.assertArrayEquals(new byte[]{0x17, 0x20, 0xd, 0x20, 0x9, 0x20, 0x7, 0x20, 0x3c, 0x20, 0x0, 0x20, 0x1e, 0x20, 0x7, 0x20, 0x3f, 0x20, 0, 0x20, 0x6, 0x20},
+                Files.readAllBytes(new File(encryptor.fname).toPath()));
+    }
     }
 
     @Test
     public void decrypt() throws IOException {
-        File fl = folder.newFile("input");
-        File flo = folder.newFile("output");
-        FileUtils.writeStringToFile(fl, " \u000E\u0003\n2\u0018\u001E\u0007<\n\b\u00189\n\u001D\u001F");
-        Ciphering program = new Ciphering("key", fl.getAbsolutePath());
-        Assert.assertEquals("Tests", program.coding());
+        File file = temporaryFolder.newFile("input");
+        Files.write(file.toPath(), new byte[]{0x17, 0x20, 0xd, 0x20, 0x9, 0x20, 0x7, 0x20, 0x3c, 0x20, 0x0, 0x20, 0x1e, 0x20, 0x7, 0x20, 0x3f, 0x20, 0, 0x20, 0x6, 0x20});
+        Ciphering coding = new Ciphering(new String[]{"-d", "54656c74", file.getAbsolutePath()});
+        Assert.assertArrayEquals("Chesherskej".getBytes(),
+                Files.readAllBytes(new File(coding.text).toPath()));
     }
 }
