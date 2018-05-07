@@ -1,13 +1,14 @@
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 
 public class Ciphering {
     private String key;
     public String text;
 
-    public Ciphering(String key, String text) {
-        this.key = key;
+    public Ciphering(String tkey, String text) {
+        this.key = tkey;
         this.text = text;
     }
 
@@ -23,15 +24,18 @@ public class Ciphering {
     public String coding() throws IOException {
         byte[] key = stringToByte(this.key);
         StringBuilder res = new StringBuilder();
-        byte[] tmp = Files.readAllBytes(Paths.get(text));
+        byte[] tmp = new byte[key.length];
+        InputStream inp = new FileInputStream(new File(text));
         int k = 0;
         do {
-            for (int i = 0; i < key.length && k * key.length + i < tmp.length; i++) {
-                res.append((char) (tmp[k * key.length + i] ^ key[i]));
+            int sz = inp.read(tmp);
+            for (int i = 0; i < key.length && i < sz; i++) {
+                res.append((char) (tmp[i] ^ key[i]));
             }
-            k++;
+            k += sz;
         }
-        while (k * key.length < tmp.length);
+        while (k < new File(text).length());
+        inp.close();
         return res.toString();
     }
 }

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Main {
-    public static Prog p = new Prog();
+    private static Prog p = new Prog();
 
     public static void main(String[] args) {
         Ciphering prg = p.parse(args);
@@ -19,7 +19,9 @@ public class Main {
                 }
                 PrintWriter out = new PrintWriter(p.outputName);
                 out.println(prg.coding());
+                out.close();
             } catch (IOException e) {
+                e.printStackTrace(System.err);
             }
         } else {
             try {
@@ -33,7 +35,7 @@ public class Main {
 
 class Prog {
     @Option(name = "-o", usage = "Output file")
-    public String outputName;
+    String outputName;
     @Argument
     private String inputName;
     @Option(name = "-c", usage = "Cipher file with key")
@@ -42,7 +44,7 @@ class Prog {
     @Option(name = "-d", usage = "Decipher file with key")
     private String dkay = null;
 
-    public Ciphering parse(final String[] args) {
+    Ciphering parse(final String[] args) {
         CmdLineParser cmd = new CmdLineParser(this);
         try {
             cmd.parseArgument(args);
@@ -50,7 +52,12 @@ class Prog {
             System.err.print(exception.getMessage());
             cmd.printUsage(System.out);
         }
-        return new Ciphering(ckey != null ? ckey : dkay != null ? dkay : "", inputName);
+        String key = ckey != null ? ckey : dkay != null ? dkay : "";
+        if (key == "") {
+            cmd.printUsage(System.out);
+            System.exit(0);
+        }
+        return new Ciphering(key, inputName);
     }
 }
 
