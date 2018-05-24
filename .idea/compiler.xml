@@ -6,11 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Ciphering" />
+        <module name="Progect2" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Ciphering" target="1.7" />
-    </bytecodeTargetLevel>
   </component>
 </project>

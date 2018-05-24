@@ -12,52 +12,52 @@ public class Main {
 
     public static void main(String[] args) {
         Ciphering prg = p.parse(args);
-        if (p.outputName != null) {
-            try {
-                if (!new File(p.outputName).exists()) {
-                    new File(p.outputName).createNewFile();
-                }
-                PrintWriter out = new PrintWriter(p.outputName);
-                out.println(prg.coding());
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace(System.err);
+        if (p.outputName == null) {
+            p.outputName = p.inputName + ".avt";
+        }
+        try {
+            if (!new File(p.outputName).exists()) {
+                new File(p.outputName).createNewFile();
             }
-        } else {
-            try {
-                System.out.println(prg.coding());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            PrintWriter out = new PrintWriter(p.outputName);
+            out.println(prg.coding());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
         }
     }
-}
 
-class Prog {
-    @Option(name = "-o", usage = "Output file")
-    String outputName;
-    @Argument
-    private String inputName;
-    @Option(name = "-c", usage = "Cipher file with key")
-    private String ckey = null;
+    static class Prog {
+        @Option
+                (name = "-o", usage = "Output file")
+        private String outputName;
+        @Argument
+        private String inputName;
+        @Option
+                (name = "-c", usage = "Cipher file with key")
+        private String ckey = null;
 
-    @Option(name = "-d", usage = "Decipher file with key")
-    private String dkay = null;
+        @Option
+                (name = "-d", usage = "Decipher file with key")
+        private String dkay = null;
 
-    Ciphering parse(final String[] args) {
-        CmdLineParser cmd = new CmdLineParser(this);
-        try {
-            cmd.parseArgument(args);
-        } catch (CmdLineException exception) {
-            System.err.print(exception.getMessage());
-            cmd.printUsage(System.out);
+        Ciphering parse(final String[] args) {
+            CmdLineParser cmd = new CmdLineParser(this);
+            try {
+                cmd.parseArgument(args);
+            } catch (CmdLineException exception) {
+                System.err.print(exception.getMessage());
+                cmd.printUsage(System.out);
+            }
+            String key = ckey != null ? ckey : dkay != null ? dkay : "";
+            if (key == "") {
+                cmd.printUsage(System.out);
+                System.exit(0);
+            }
+            return new Ciphering(key, inputName);
         }
-        String key = ckey != null ? ckey : dkay != null ? dkay : "";
-        if (key == "") {
-            cmd.printUsage(System.out);
-            System.exit(0);
-        }
-        return new Ciphering(key, inputName);
+
+
     }
 }
 
